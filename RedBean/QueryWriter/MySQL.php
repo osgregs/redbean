@@ -143,7 +143,13 @@ class RedBean_QueryWriter_MySQL extends RedBean_QueryWriter_AQueryWriter impleme
 	 * @var string
 	 * character to escape keyword table/column names
 	 */
-  protected $quoteCharacter = '`';
+         protected $quoteCharacter = '`';
+
+        /** 
+         * @var array 
+         * cache primary keys on objects 
+         */ 
+        protected $tblids = array(); 
 
 	/**
 	 * Constructor.
@@ -166,6 +172,21 @@ class RedBean_QueryWriter_MySQL extends RedBean_QueryWriter_AQueryWriter impleme
 	public function getTables() {
 		return $this->adapter->getCol( "show tables" );
 	}
+
+
+        /** 
+         * Returns the column name that should be used 
+         * to store and retrieve the primary key ID. 
+         * 
+         * @param string $type type of bean to get ID Field for 
+         * 
+         * @return string $idfieldtobeused ID field to be used for this type of bean 
+         */ 
+        public function getIDField( $type ) { 
+                if(isset($this->tblids[$type])) return $this->tblids[$type]; 
+                $retval = $this->adapter->getRow("SHOW INDEX FROM {$type} WHERE Key_name = 'PRIMARY'"); 
+                return $this->tblids[$type] =  $retval['Column_name']; 
+        }
 
 	/**
 	 * Creates an empty, column-less table for a bean.
