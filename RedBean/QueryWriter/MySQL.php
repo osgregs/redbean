@@ -143,7 +143,7 @@ class RedBean_QueryWriter_MySQL extends RedBean_QueryWriter_AQueryWriter impleme
 	 * @var string
 	 * character to escape keyword table/column names
 	 */
-         protected $quoteCharacter = '`';
+        protected $quoteCharacter = '`';
 
         /** 
          * @var array 
